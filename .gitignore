@@ -1,0 +1,14 @@
+# Exclude Python bytecode files
+*.pyc
+*.pyo
+__pycache__
+
+# Exclude environment files
+env/
+venv/
+
+# Exclude Firebase credentials (do not upload the Firebase service account JSON file)
+firebase-credentials.json
+
+# Exclude Streamlit session state files
+.streamlit/
