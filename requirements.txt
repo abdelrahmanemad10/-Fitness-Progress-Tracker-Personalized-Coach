@@ -1,6 +1,6 @@
 streamlit
-pandas
-numpy
+firebase-admin
 matplotlib
 seaborn
+pandas
 scikit-learn
