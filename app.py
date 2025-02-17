@@ -1,85 +1,52 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import numpy as np
 
-# Initialize Firebase Admin SDK
-cred = credentials.Certificate("firebase-credentials.json")  # Replace with your Firebase credentials path
-firebase_admin.initialize_app(cred)
+# Check if Firebase is already initialized
+if not firebase_admin._apps:
+    cred = credentials.Certificate("firebase-credentials.json")  # Replace with your actual JSON key file
+    firebase_admin.initialize_app(cred)
 
 # Firestore Setup
 db = firestore.client()
 
-# Function to authenticate the user
-def authenticate_user():
-    option = st.sidebar.selectbox("Select Action", ["Login", "Sign Up"])
-    if option == "Login":
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
-            # Check credentials (Firebase logic to check the username/password)
-            # If valid, return True (you can implement logic here)
-            st.success("Login successful!")
-            return True
-    elif option == "Sign Up":
-        username = st.text_input("Create Username")
-        password = st.text_input("Create Password", type="password")
-        if st.button("Sign Up"):
-            # Save user to Firebase (you can add logic for Firebase signup here)
-            st.success("Signup successful!")
-            return True
+# Streamlit App
+st.title("Fitness Progress Tracker & Personalized Coach")
 
-# User Authentication
-if authenticate_user():
-    st.title("Fitness Progress Tracker & Personalized Coach")
+# User Authentication Placeholder
+st.sidebar.subheader("User Authentication")
+username = st.sidebar.text_input("Username")
+password = st.sidebar.text_input("Password", type="password")
+login_button = st.sidebar.button("Login")
 
-    # Input: Log workout details
-    st.header("Log Your Workout")
-    exercise_type = st.selectbox("Exercise Type", ["Squat", "Bench Press", "Deadlift", "Biceps Curl", "Other"])
-    weight = st.number_input("Weight (kg)", min_value=0, step=1)
-    reps = st.number_input("Reps", min_value=0, step=1)
+# If login button is clicked (Authentication Logic Needed)
+if login_button:
+    st.sidebar.success(f"Logged in as {username}")
 
-    # Store workout data in Firestore
-    if st.button("Log Workout"):
-        workout_data = {
-            "exercise_type": exercise_type,
-            "weight": weight,
-            "reps": reps,
-            "timestamp": firestore.SERVER_TIMESTAMP
-        }
-        db.collection("workouts").add(workout_data)
-        st.success("Workout logged successfully!")
+# User Dashboard
+st.header("Track Your Progress")
 
-    # Display progress (retrieve and show workouts)
-    st.header("Your Progress")
-    workouts_ref = db.collection("workouts").stream()
-    workout_data_list = []
-    for workout in workouts_ref:
-        workout_data = workout.to_dict()
-        workout_data_list.append(workout_data)
+# User Data Input
+st.subheader("Enter Workout Data")
+exercise = st.text_input("Exercise Name")
+weight = st.number_input("Weight Used (kg)", min_value=0.0, step=0.5)
+sets = st.number_input("Number of Sets", min_value=1, step=1)
+reps = st.number_input("Reps per Set", min_value=1, step=1)
+submit_button = st.button("Save Workout")
 
-    # Display workouts in a table
-    if workout_data_list:
-        df = pd.DataFrame(workout_data_list)
-        st.dataframe(df)
+if submit_button:
+    workout_data = {
+        "exercise": exercise,
+        "weight": weight,
+        "sets": sets,
+        "reps": reps
+    }
+    db.collection("workouts").add(workout_data)
+    st.success("Workout data saved successfully!")
 
-        # Progress visualization (simple example: average weight lifted)
-        st.subheader("Your Progress Over Time")
-        avg_weight = df.groupby("exercise_type")["weight"].mean()
-        st.bar_chart(avg_weight)
-
-    # Personalized coach (AI-based or static recommendations)
-    st.header("Personalized Recommendations")
-    st.write("Based on your progress, here are some personalized suggestions:")
-    # You can add AI-driven logic here to give recommendations, such as:
-    st.write("1. Increase reps for Biceps Curl.")
-    st.write("2. Try adding more weight to your Deadlift.")
-
-# Debugging: Display Firebase data on the app
-if st.button("Show All Workouts"):
-    workouts_ref = db.collection("workouts").stream()
-    for workout in workouts_ref:
-        st.write(workout.to_dict())
+# Retrieve and Display Data
+st.subheader("Workout History")
+workouts = db.collection("workouts").stream()
+for workout in workouts:
+    data = workout.to_dict()
+    st.write(f"**{data['exercise']}** - {data['weight']} kg, {data['sets']} sets x {data['reps']} reps")
