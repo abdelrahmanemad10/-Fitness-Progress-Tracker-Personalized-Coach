@@ -14,29 +14,45 @@ def main():
         """
         <style>
         .stApp {
-            background-color: #1E1E1E;
+            background-color: #121212;
             color: #FFD700;
+            font-family: 'Arial', sans-serif;
         }
         .stTitle {
             text-align: center;
-            font-size: 2em;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFA500;
         }
         .stHeader {
             color: #FFD700;
+        }
+        .stVideo {
+            border-radius: 10px;
+        }
+        .section {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.2);
         }
         </style>
         """, unsafe_allow_html=True
     )
     
-    st.title("🌙🏋️ Ramadan Gym Planner")
+    st.markdown("<h1 class='stTitle'>🌙🏋️ Ramadan Gym Planner</h1>", unsafe_allow_html=True)
     st.write("Stay fit and maintain muscle mass during Ramadan with a structured workout plan!")
     
     # Select workout days
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.header("🗓️ Choose Your Workout Days")
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     selected_days = st.multiselect("Select the days you plan to work out:", days, default=["Monday", "Wednesday", "Saturday"])
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # Workout Plan
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.header("💪 Workout Plan")
     if selected_days:
         for day in selected_days:
@@ -83,13 +99,16 @@ def main():
                 st.write("- Stretching / Yoga")
     else:
         st.write("⚠️ Please select at least one workout day.")
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # Nutrition Tips
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.header("🍽️ Nutrition Tips for Ramadan")
     st.write("- **Suhoor:** Eat slow-digesting protein (yogurt, nuts, oats) to stay full longer.")
     st.write("- **Iftar:** Break fast with dates and water, then have a balanced meal with protein, carbs, and healthy fats.")
     st.write("- **Hydration:** Drink 2-3 liters of water between Iftar and Suhoor.")
     st.write("- **Supplements:** Consider BCAAs during workouts and creatine post-workout.")
+    st.markdown("</div>", unsafe_allow_html=True)
     
     st.success("💡 Stay consistent and make the most of Ramadan while keeping your gains!")
 
