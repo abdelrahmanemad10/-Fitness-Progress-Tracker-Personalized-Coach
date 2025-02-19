@@ -1,7 +1,34 @@
 import streamlit as st
+import time
+
+st.set_page_config(page_title="Ramadan Gym Planner", page_icon="🌙", layout="wide")
+
+def loading_animation():
+    with st.spinner("Loading your personalized Ramadan fitness plan..."):
+        time.sleep(2)
 
 def main():
-    st.title("🏋️ Ramadan Gym Planner")
+    loading_animation()
+    
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #1E1E1E;
+            color: #FFD700;
+        }
+        .stTitle {
+            text-align: center;
+            font-size: 2em;
+        }
+        .stHeader {
+            color: #FFD700;
+        }
+        </style>
+        """, unsafe_allow_html=True
+    )
+    
+    st.title("🌙🏋️ Ramadan Gym Planner")
     st.write("Stay fit and maintain muscle mass during Ramadan with a structured workout plan!")
     
     # Select workout days
